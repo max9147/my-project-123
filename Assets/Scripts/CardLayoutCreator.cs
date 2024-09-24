@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class CardLayoutCreator : MonoBehaviour
     [SerializeField] private CardPrefabController _cardPrefabController;
     [SerializeField] private GridLayoutGroup _gridLayout;
     [SerializeField] private RectTransform _layoutContainer;
+    [SerializeField] private Slider _initialShowSlider;
     [SerializeField] private Sprite[] _cardSprites;
 
     private List<CardPrefabController> _spawnedCards;
@@ -54,6 +56,11 @@ public class CardLayoutCreator : MonoBehaviour
         foreach (Transform _child in _layoutContainer.transform)
             Destroy(_child.gameObject);
 
+        foreach (var _spawnedCard in _spawnedCards)
+            Destroy(_spawnedCard.gameObject);
+
+        _spawnedCards.Clear();
+
         List<int> _availableCards = new List<int>();
 
         for (int i = 0; i < _layoutX * _layoutY / 2; i++)
@@ -85,5 +92,12 @@ public class CardLayoutCreator : MonoBehaviour
 
             yield return new WaitForSeconds(2f / _spawnedCards.Count);
         }
+
+        foreach (var _spawnedCard in _spawnedCards)
+            _spawnedCard.InitialShow(5 - (int)DataContainer.Instance.CurrentDifficulty);
+
+        _initialShowSlider.value = 1f;
+
+        _initialShowSlider.DOValue(0f, 5 - (int)DataContainer.Instance.CurrentDifficulty).SetEase(Ease.Linear);
     }
 }
