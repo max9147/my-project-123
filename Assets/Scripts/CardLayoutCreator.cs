@@ -1,35 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/*public enum CardLayout
-{
-    2x2,
-    3x2,
-    4x2,
-    4x3,
-    4x4,
-    5x4,
-    6x4,
-    6x5,
-    6x6,
-}*/
-
 public class CardLayoutCreator : MonoBehaviour
 {
     [SerializeField] private GameObject _cardPrefab;
     [SerializeField] private GridLayoutGroup _gridLayout;
     [SerializeField] private RectTransform _layoutContainer;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            CalculateLayout(1);
-    }
-
     public void CalculateLayout(int _level)
     {
         int _layoutX = 2;
         int _layoutY = 2;
+
+        int _difficultyScore = Mathf.FloorToInt(_level * 0.3f * ((int)DataContainer.Instance.CurrentDifficulty / 2f + 1f));
+
+        for (int i = 0; i < _difficultyScore; i++)
+        {
+            if (_layoutY < _layoutX && _layoutX * (_layoutY + 1) % 2 == 0)
+                _layoutY++;
+            else
+                _layoutX++;
+        }
+
+        _layoutX = Mathf.Clamp(_layoutX, 2, 6);
+        _layoutY = Mathf.Clamp(_layoutY, 2, 6);
 
         Constructlayout(_layoutX, _layoutY);
     }
@@ -46,6 +40,9 @@ public class CardLayoutCreator : MonoBehaviour
             _currentCellSize = (_layoutContainer.sizeDelta.y - _layoutY * _gridLayout.spacing.y) / _layoutY;
 
         _gridLayout.cellSize = new Vector2(_currentCellSize, _currentCellSize);
+
+        foreach (Transform _child in _layoutContainer.transform)
+            Destroy(_child.gameObject);
 
         for (int i = 0; i < _layoutX * _layoutY; i++)
             Instantiate(_cardPrefab, _layoutContainer);
