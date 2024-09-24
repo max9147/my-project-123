@@ -1,11 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardLayoutCreator : MonoBehaviour
 {
-    [SerializeField] private GameObject _cardPrefab;
+    [SerializeField] private CardPrefabController _cardPrefabController;
     [SerializeField] private GridLayoutGroup _gridLayout;
     [SerializeField] private RectTransform _layoutContainer;
+    [SerializeField] private Sprite[] _cardSprites;
+
+    private List<CardPrefabController> _spawnedCards;
+
+    private void Awake()
+    {
+        _spawnedCards = new List<CardPrefabController>();
+    }
 
     public void CalculateLayout(int _level)
     {
@@ -44,7 +54,36 @@ public class CardLayoutCreator : MonoBehaviour
         foreach (Transform _child in _layoutContainer.transform)
             Destroy(_child.gameObject);
 
+        List<int> _availableCards = new List<int>();
+
+        for (int i = 0; i < _layoutX * _layoutY / 2; i++)
+        {
+            _availableCards.Add(i);
+            _availableCards.Add(i);
+        }
+
         for (int i = 0; i < _layoutX * _layoutY; i++)
-            Instantiate(_cardPrefab, _layoutContainer);
+        {
+            CardPrefabController _currentCard = Instantiate(_cardPrefabController, _layoutContainer);
+            _spawnedCards.Add(_currentCard);
+
+            int _randomAvailableIndex = Random.Range(0, _availableCards.Count);
+
+            _currentCard.SetupCard(_availableCards[_randomAvailableIndex], _cardSprites[_availableCards[_randomAvailableIndex]]);
+
+            _availableCards.RemoveAt(_randomAvailableIndex);
+        }
+
+        StartCoroutine(AnimateCardsSpawn());
+    }
+
+    private IEnumerator AnimateCardsSpawn()
+    {
+        for (int i = 0; i < _spawnedCards.Count; i++)
+        {
+            _spawnedCards[i].AnimateSpawn();
+
+            yield return new WaitForSeconds(2f / _spawnedCards.Count);
+        }
     }
 }
