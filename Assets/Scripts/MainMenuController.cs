@@ -12,7 +12,8 @@ public enum MenuContainer
 
 public class MainMenuController : MonoBehaviour
 {
-    [SerializeField] private GameObject _mainMenu;
+    [SerializeField] private GameController _gameController;
+    [SerializeField] private GameObject _mainMenuScreen;
     [SerializeField] private Image _menuFade;
     [SerializeField] private Image _globalFade;
     [SerializeField] private LeaderboardEntryController _leaderboardEntryPrefab;
@@ -32,6 +33,11 @@ public class MainMenuController : MonoBehaviour
     private void Start()
     {
         AudioListener.volume = DataContainer.Instance.CurrentSoundIsOn ? 1f : 0f;
+    }
+
+    public void InitializeMenu()
+    {
+        _mainMenuScreen.SetActive(true);
     }
 
     public void PressClearDataButton()
@@ -85,9 +91,14 @@ public class MainMenuController : MonoBehaviour
         StartCoroutine(OpeningContainer(MenuContainer.Settings));
     }
 
-    public void PressPlay()
+    public void PressPlayButton()
     {
         StartCoroutine(StartingGame());
+    }
+
+    public void PressQuit()
+    {
+        Application.Quit();
     }
 
     public void PressToggleSoundButton()
@@ -172,7 +183,8 @@ public class MainMenuController : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        _mainMenu.SetActive(false);
+        _mainMenuScreen.SetActive(false);
+        _gameController.InitializeGame();
 
         _globalFade.DOColor(Color.clear, 0.5f);
 
