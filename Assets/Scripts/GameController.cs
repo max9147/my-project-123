@@ -1,8 +1,8 @@
 using DG.Tweening;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -12,12 +12,20 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
 
     private CardLayoutCreator _cardLayoutCreator;
+    private CardPrefabController _lastCardController;
 
     private int _currentLevel;
+    private int _currentPairCount;
+    private int _currentPairSolved;
+    private int _lastCardID;
 
     private void Awake()
     {
         _cardLayoutCreator = GetComponent<CardLayoutCreator>();
+
+        _currentPairCount = 0;
+        _currentPairSolved = 0;
+        _lastCardID = -1;
     }
 
     public void InitializeGame()
@@ -34,6 +42,40 @@ public class GameController : MonoBehaviour
         StartCoroutine(StoppingGame());
     }
 
+    public void SelectCard(int _selectedCardID, CardPrefabController _selectedCardController)
+    {
+        if (_lastCardID == -1)
+        {
+            _lastCardID = _selectedCardID;
+            _lastCardController = _selectedCardController;
+        }
+        else
+        {
+            if (_selectedCardID == _lastCardID)
+            {
+                _lastCardController.HideCard();
+                _selectedCardController.HideCard();
+
+                _currentPairSolved++;
+
+                if (_currentPairSolved == _currentPairCount)
+                    Invoke(nameof(AdvanceLevel), 2f);
+            }
+            else
+            {
+                _lastCardController.CloseCard(1f);
+                _selectedCardController.CloseCard(1f);
+            }
+
+            _lastCardID = -1;
+        }
+    }
+
+    public void SetPairCount(int _setPairCount)
+    {
+        _currentPairCount = _setPairCount;
+    }
+
     private void AdvanceLevel()
     {
         _currentLevel++;
@@ -43,6 +85,8 @@ public class GameController : MonoBehaviour
 
     private IEnumerator StartingLevel()
     {
+        _currentPairSolved = 0;
+
         _cardLayoutCreator.CalculateLayout(_currentLevel);
 
         _levelText.text = $"Level {_currentLevel}";

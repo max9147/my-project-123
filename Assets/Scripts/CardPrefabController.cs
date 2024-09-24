@@ -9,6 +9,8 @@ public class CardPrefabController : MonoBehaviour
     [SerializeField] private Image _cardBackImage;
     [SerializeField] private RectTransform _cardGraphics;
 
+    private GameController _gameController;
+
     private bool _cardIsLocked;
     private int _cardID;
 
@@ -24,6 +26,16 @@ public class CardPrefabController : MonoBehaviour
         _cardGraphics.DOAnchorPos(Vector2.zero, 0.5f);
     }
 
+    public void CloseCard(float _setDelay)
+    {
+        StartCoroutine(FlippingCard(false, _setDelay));
+    }
+
+    public void HideCard()
+    {
+        StartCoroutine(HidingCard());
+    }
+
     public void InitialShow(float _showTime)
     {
         StartCoroutine(InitialShowing(_showTime));
@@ -34,53 +46,55 @@ public class CardPrefabController : MonoBehaviour
         if (_cardIsLocked)
             return;
 
-        StartCoroutine(FlippingCard());
+        _gameController.SelectCard(_cardID, this);
+
+        StartCoroutine(FlippingCard(true));
     }
 
-    public void SetupCard(int _setID, Sprite _setSprite)
+    public void SetupCard(int _setID, Sprite _setSprite, GameController _setGameController)
     {
         _cardID = _setID;
         _cardFrontImage.sprite = _setSprite;
+        _gameController = _setGameController;
     }
 
-    private IEnumerator FlippingCard()
+    private IEnumerator FlippingCard(bool _toFront, float _delay = 0f)
     {
-        _cardIsLocked = true;
+        yield return new WaitForSeconds(_delay);
+
+        if (_toFront)
+            _cardIsLocked = true;
 
         _cardGraphics.DOScaleX(0f, 0.2f);
 
         yield return new WaitForSeconds(0.2f);
 
-        _cardBackImage.gameObject.SetActive(false);
-        _cardFrontImage.gameObject.SetActive(true);
+        _cardBackImage.gameObject.SetActive(!_toFront);
+        _cardFrontImage.gameObject.SetActive(_toFront);
 
         _cardGraphics.DOScaleX(1f, 0.2f);
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!_toFront)
+            _cardIsLocked = false;
+    }
+
+    private IEnumerator HidingCard()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        _cardGraphics.DOJumpAnchorPos(new Vector2(Random.Range(-Screen.width / 2, Screen.width / 2), -Screen.height), Screen.height / 2f, 1, 1f);
     }
 
     private IEnumerator InitialShowing(float _showTime)
     {
-        _cardGraphics.DOScaleX(0f, 0.2f);
+        StartCoroutine(FlippingCard(true));
 
         yield return new WaitForSeconds(0.2f);
-
-        _cardBackImage.gameObject.SetActive(false);
-        _cardFrontImage.gameObject.SetActive(true);
-
-        _cardGraphics.DOScaleX(1f, 0.2f);
 
         yield return new WaitForSeconds(_showTime - 0.6f);
 
-        _cardGraphics.DOScaleX(0f, 0.2f);
-
-        yield return new WaitForSeconds(0.2f);
-
-        _cardFrontImage.gameObject.SetActive(false);
-        _cardBackImage.gameObject.SetActive(true);
-
-        _cardGraphics.DOScaleX(1f, 0.2f);
-
-        yield return new WaitForSeconds(0.2f);
-
-        _cardIsLocked = false;
+        StartCoroutine(FlippingCard(false));
     }
 }

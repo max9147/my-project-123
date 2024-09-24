@@ -12,10 +12,12 @@ public class CardLayoutCreator : MonoBehaviour
     [SerializeField] private Slider _initialShowSlider;
     [SerializeField] private Sprite[] _cardSprites;
 
+    private GameController _gameController;
     private List<CardPrefabController> _spawnedCards;
 
     private void Awake()
     {
+        _gameController = GetComponent<GameController>();
         _spawnedCards = new List<CardPrefabController>();
     }
 
@@ -76,10 +78,12 @@ public class CardLayoutCreator : MonoBehaviour
 
             int _randomAvailableIndex = Random.Range(0, _availableCards.Count);
 
-            _currentCard.SetupCard(_availableCards[_randomAvailableIndex], _cardSprites[_availableCards[_randomAvailableIndex]]);
+            _currentCard.SetupCard(_availableCards[_randomAvailableIndex], _cardSprites[_availableCards[_randomAvailableIndex]], _gameController);
 
             _availableCards.RemoveAt(_randomAvailableIndex);
         }
+
+        _gameController.SetPairCount(_layoutX * _layoutY / 2);
 
         StartCoroutine(AnimateCardsSpawn());
     }
@@ -92,6 +96,8 @@ public class CardLayoutCreator : MonoBehaviour
 
             yield return new WaitForSeconds(2f / _spawnedCards.Count);
         }
+
+        yield return new WaitForSeconds(0.5f);
 
         foreach (var _spawnedCard in _spawnedCards)
             _spawnedCard.InitialShow(5 - (int)DataContainer.Instance.CurrentDifficulty);
