@@ -38,7 +38,11 @@ public class DataContainer : MonoBehaviour
 {
     public static DataContainer Instance;
 
+    public List<RecordData> CurrentRecords => _dataStruct.RecordDatas;
+
     public Difficulty CurrentDifficulty => _dataStruct.SelectedDifficulty;
+
+    public bool CurrentSoundIsOn => _dataStruct.SoundIsOn;
 
     [SerializeField] private DataStruct _dataStruct;
 
