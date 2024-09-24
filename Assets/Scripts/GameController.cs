@@ -8,12 +8,14 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject _gameScreen;
     [SerializeField] private Image _globalFade;
+    [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
     [SerializeField] private TextMeshProUGUI _levelText;
 
     private CardLayoutCreator _cardLayoutCreator;
     private CardPrefabController _lastCardController;
 
+    private int _currentHealth;
     private int _currentLevel;
     private int _currentPairCount;
     private int _currentPairSolved;
@@ -23,6 +25,7 @@ public class GameController : MonoBehaviour
     {
         _cardLayoutCreator = GetComponent<CardLayoutCreator>();
 
+        _currentHealth = 0;
         _currentPairCount = 0;
         _currentPairSolved = 0;
         _lastCardID = -1;
@@ -32,6 +35,17 @@ public class GameController : MonoBehaviour
     {
         _gameScreen.SetActive(true);
 
+        _currentHealth = (int)(DataContainer.Instance.CurrentDifficulty + 1) * 2;
+
+        foreach (var _heart in _hearts)
+        {
+            _heart.gameObject.SetActive(false);
+            _heart.color = Color.red;
+        }
+
+        for (int i = 0; i < _currentHealth; i++)
+            _hearts[i].gameObject.SetActive(true);
+
         _currentLevel = 0;
 
         AdvanceLevel();
@@ -39,6 +53,9 @@ public class GameController : MonoBehaviour
 
     public void PressHomeButton()
     {
+        StopAllCoroutines();
+        _cardLayoutCreator.StopAllCoroutines();
+
         StartCoroutine(StoppingGame());
     }
 
@@ -65,6 +82,12 @@ public class GameController : MonoBehaviour
             {
                 _lastCardController.CloseCard(1f);
                 _selectedCardController.CloseCard(1f);
+
+                _currentHealth--;
+                _hearts[_currentHealth].color = Color.black;
+
+                if (_currentHealth == 0)
+                    StartCoroutine(StoppingGame());
             }
 
             _lastCardID = -1;
