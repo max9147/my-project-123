@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 
     private CardLayoutCreator _cardLayoutCreator;
     private CardPrefabController _lastCardController;
+    private ScoringSystem _scoringSystem;
 
     private int _currentHealth;
     private int _currentLevel;
@@ -24,6 +25,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         _cardLayoutCreator = GetComponent<CardLayoutCreator>();
+        _scoringSystem = GetComponent<ScoringSystem>();
 
         _currentHealth = 0;
         _currentPairCount = 0;
@@ -35,7 +37,7 @@ public class GameController : MonoBehaviour
     {
         _gameScreen.SetActive(true);
 
-        _currentHealth = (int)(DataContainer.Instance.CurrentDifficulty + 1) * 2;
+        _currentHealth = (int)(3 - DataContainer.Instance.CurrentDifficulty) * 2;
 
         foreach (var _heart in _hearts)
         {
@@ -68,6 +70,8 @@ public class GameController : MonoBehaviour
         }
         else
         {
+            _scoringSystem.CountTurn(_selectedCardID == _lastCardID);
+
             if (_selectedCardID == _lastCardID)
             {
                 _lastCardController.HideCard();
@@ -87,7 +91,11 @@ public class GameController : MonoBehaviour
                 _hearts[_currentHealth].color = Color.black;
 
                 if (_currentHealth == 0)
+                {
+                    DataContainer.Instance.SubmitRecord(_scoringSystem.CurrentScore);
+
                     StartCoroutine(StoppingGame());
+                }
             }
 
             _lastCardID = -1;
@@ -134,6 +142,7 @@ public class GameController : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        _scoringSystem.ResetScoring();
         _gameScreen.SetActive(false);
         _mainMenuController.InitializeMenu();
 
