@@ -81,6 +81,8 @@ public class GameController : MonoBehaviour
 
             if (_selectedCardID == _lastCardID)
             {
+                SoundManager.Instance.PlayCorrectSound();
+
                 _lastCardController.HideCard();
                 _selectedCardController.HideCard();
 
@@ -91,6 +93,8 @@ public class GameController : MonoBehaviour
             }
             else
             {
+                SoundManager.Instance.PlayWrongSound();
+
                 _lastCardController.CloseCard(1f);
                 _selectedCardController.CloseCard(1f);
 
@@ -125,6 +129,8 @@ public class GameController : MonoBehaviour
 
     private void PlayGameOver()
     {
+        SoundManager.Instance.PlayFailSound();
+
         _cardLayoutCreator.HideCards();
 
         _gameOverText.text = $"Game over!\nFinal score: {_scoringSystem.CurrentScore}";

@@ -46,6 +46,8 @@ public class CardPrefabController : MonoBehaviour
         if (_cardIsLocked)
             return;
 
+        SoundManager.Instance.PlayWhooshSound();
+
         _gameController.SelectCard(_cardID, this);
 
         StartCoroutine(FlippingCard(true));

@@ -55,6 +55,8 @@ public class DataContainer : MonoBehaviour
         else
             Destroy(gameObject);
 
+        DontDestroyOnLoad(gameObject);
+
         _dataPath = Path.Combine(Application.persistentDataPath, "Data.txt");
 
         if (File.Exists(_dataPath))
