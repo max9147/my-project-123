@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Image _globalFade;
     [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
+    [SerializeField] private RectTransform _heartsContainer;
     [SerializeField] private RectTransform _homeButton;
     [SerializeField] private Sprite _heartSprite;
     [SerializeField] private Sprite _skullSprite;
@@ -43,6 +44,8 @@ public class GameController : MonoBehaviour
         _gameScreen.SetActive(true);
 
         _currentHealth = (int)(3 - DataContainer.Instance.CurrentDifficulty) * 2;
+
+        _heartsContainer.sizeDelta = new Vector2(_heartsContainer.sizeDelta.x, _currentHealth * 80f + (_currentHealth - 1) * 10f);
 
         foreach (var _heart in _hearts)
         {
