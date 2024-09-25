@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject _gameScreen;
+    [SerializeField] private Image _errorFlash;
     [SerializeField] private Image _globalFade;
     [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
@@ -90,6 +91,8 @@ public class GameController : MonoBehaviour
                 _lastCardController.CloseCard(1f);
                 _selectedCardController.CloseCard(1f);
 
+                StartCoroutine(FlashError());
+
                 _currentHealth--;
                 _hearts[_currentHealth].sprite = _skullSprite;
 
@@ -115,6 +118,18 @@ public class GameController : MonoBehaviour
         _currentLevel++;
 
         StartCoroutine(StartingLevel());
+    }
+
+    private IEnumerator FlashError()
+    {
+        _errorFlash.DOKill();
+        _errorFlash.color = new Color(1f, 0f, 0f, 0f);
+
+        _errorFlash.DOColor(new Color(1f, 0f, 0f, 0.5f), 0.25f);
+
+        yield return new WaitForSeconds(0.25f);
+
+        _errorFlash.DOColor(new Color(1f, 0f, 0f, 0f), 0.25f);
     }
 
     private IEnumerator PlayingGameOver()
