@@ -59,16 +59,22 @@ public class DataContainer : MonoBehaviour
 
         _dataPath = Path.Combine(Application.persistentDataPath, "Data.txt");
 
-        if (File.Exists(_dataPath))
-            _dataStruct = JsonUtility.FromJson<DataStruct>(File.ReadAllText(_dataPath));
-        else
-        {
-            _dataStruct.RecordDatas = new List<RecordData>();
-            _dataStruct.SelectedDifficulty = Difficulty.Normal;
-            _dataStruct.SoundIsOn = true;
+        //  Reading saved data from file. If file doesn't exist or is corrupted generate new data
 
-            File.WriteAllText(_dataPath, JsonUtility.ToJson(_dataStruct, true));
+        if (File.Exists(_dataPath))
+        {
+            try
+            {
+                _dataStruct = JsonUtility.FromJson<DataStruct>(File.ReadAllText(_dataPath));
+            }
+            catch (System.Exception)
+            {
+                File.Delete(_dataPath);
+                InitializeData();
+            }
         }
+        else
+            InitializeData();
     }
 
     public void ClearData()
@@ -100,6 +106,15 @@ public class DataContainer : MonoBehaviour
         SaveData();
 
         return _dataStruct.SoundIsOn;
+    }
+
+    private void InitializeData()
+    {
+        _dataStruct.RecordDatas = new List<RecordData>();
+        _dataStruct.SelectedDifficulty = Difficulty.Normal;
+        _dataStruct.SoundIsOn = true;
+
+        SaveData();
     }
 
     private void SaveData()

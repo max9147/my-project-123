@@ -40,6 +40,9 @@ public class MainMenuController : MonoBehaviour
         _mainMenuScreen.SetActive(true);
     }
 
+    /// <summary>
+    /// Delete all saved records
+    /// </summary>
     public void PressClearDataButton()
     {
         DataContainer.Instance.ClearData();
@@ -64,6 +67,9 @@ public class MainMenuController : MonoBehaviour
         StartCoroutine(ClosingContainer(MenuContainer.Settings));
     }
 
+    /// <summary>
+    /// Opens leaderboard and populates it with current data
+    /// </summary>
     public void PressOpenLeaderboardButton()
     {
         if (_isChangingScreen)
@@ -80,6 +86,9 @@ public class MainMenuController : MonoBehaviour
         StartCoroutine(OpeningContainer(MenuContainer.Leaderboard));
     }
 
+    /// <summary>
+    /// Opens settings and adjusts controls to current set values
+    /// </summary>
     public void PressOpenSettingsButton()
     {
         if (_isChangingScreen)
@@ -175,6 +184,10 @@ public class MainMenuController : MonoBehaviour
         _isChangingScreen = false;
     }
 
+    /// <summary>
+    /// Starts the game with fade in-out animation
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StartingGame()
     {
         _globalFade.color = Color.clear;

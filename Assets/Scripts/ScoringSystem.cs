@@ -24,6 +24,8 @@ public class ScoringSystem : MonoBehaviour
 
     public void CountTurn(bool _isCorrect)
     {
+        //  Amount of score added is dependant on current correct matches combo. Combo gets reset to 1 for mismatch
+
         if (_isCorrect)
         {
             StartCoroutine(ShowingAddedScore(_currentCombo));
@@ -57,6 +59,11 @@ public class ScoringSystem : MonoBehaviour
         _turnsText.text = _currentTurns.ToString();
     }
 
+    /// <summary>
+    /// Spawning a visual cue indicating amount of score gained for last match
+    /// </summary>
+    /// <param name="_setScore">Amount of score added</param>
+    /// <returns></returns>
     private IEnumerator ShowingAddedScore(int _setScore)
     {
         RectTransform _currentAddedScore = Instantiate(_addedScorePrefab, _statsContainer);

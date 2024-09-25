@@ -21,12 +21,20 @@ public class CardLayoutCreator : MonoBehaviour
         _spawnedCards = new List<CardPrefabController>();
     }
 
+    /// <summary>
+    /// Calculates grid dimentions for upcoming level, based on selected difficulty and progress. 
+    /// </summary>
+    /// <param name="_level">Current upcoming level</param>
     public void CalculateLayout(int _level)
     {
         int _layoutX = 2;
         int _layoutY = 2;
 
+        //  Calculating expected difficulty for next level, further into the game grid becomes bigger. Higher selected difficulty speeds it up.
+
         int _difficultyScore = Mathf.FloorToInt(_level * 0.3f * ((int)DataContainer.Instance.CurrentDifficulty / 2f + 1f));
+
+        //  Calculating grid dimentions, avoiding cases with uneven card amounts. Preferring cases where x>y
 
         for (int i = 0; i < _difficultyScore; i++)
         {
@@ -35,6 +43,8 @@ public class CardLayoutCreator : MonoBehaviour
             else
                 _layoutX++;
         }
+
+        // Limiting max size to 6x6
 
         _layoutX = Mathf.Clamp(_layoutX, 2, 6);
         _layoutY = Mathf.Clamp(_layoutY, 2, 6);
@@ -48,6 +58,11 @@ public class CardLayoutCreator : MonoBehaviour
             _card.HideCard();
     }
 
+    /// <summary>
+    /// Scales cards to fit into play area and initializes grid.
+    /// </summary>
+    /// <param name="_layoutX">Grid X dimention</param>
+    /// <param name="_layoutY">Grid Y dimention</param>
     private void Constructlayout(int _layoutX, int _layoutY)
     {
         _gridLayout.constraintCount = _layoutX;
@@ -68,6 +83,8 @@ public class CardLayoutCreator : MonoBehaviour
             Destroy(_spawnedCard.gameObject);
 
         _spawnedCards.Clear();
+
+        //  Creating list of cards that will be used on a level, 2 of each kind
 
         List<int> _availableCards = new List<int>();
 
@@ -94,10 +111,16 @@ public class CardLayoutCreator : MonoBehaviour
         StartCoroutine(AnimateCardsSpawn());
     }
 
+    /// <summary>
+    /// Showing initial memorization sequence with timer. Less time given on higher difficulty
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator AnimateCardsSpawn()
     {
         _initialShowSlider.DOKill();
         _initialShowSlider.value = 0f;
+
+        //  All cards flying out in sequence, total time is staic for any amount of cards
 
         for (int i = 0; i < _spawnedCards.Count; i++)
         {

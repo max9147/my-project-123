@@ -20,6 +20,9 @@ public class CardPrefabController : MonoBehaviour
         _cardIsLocked = true;
     }
 
+    /// <summary>
+    /// Animate card flying to its spot on the grid
+    /// </summary>
     public void AnimateSpawn()
     {
         _cardGraphics.anchoredPosition = new Vector2(Random.Range(-Screen.width / 2, Screen.width / 2), -Screen.height);
@@ -64,6 +67,12 @@ public class CardPrefabController : MonoBehaviour
         _gameController = _setGameController;
     }
 
+    /// <summary>
+    /// Playing flipping animation and changing displayed side
+    /// </summary>
+    /// <param name="_toFront">Is card being flipped to front side</param>
+    /// <param name="_delay">Optional animation delay</param>
+    /// <returns></returns>
     private IEnumerator FlippingCard(bool _toFront, float _delay = 0f)
     {
         yield return new WaitForSeconds(_delay);
@@ -86,6 +95,10 @@ public class CardPrefabController : MonoBehaviour
             _cardIsLocked = false;
     }
 
+    /// <summary>
+    /// Animate card jumping away from the screen
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator HidingCard()
     {
         yield return new WaitForSeconds(0.5f);
@@ -99,6 +112,11 @@ public class CardPrefabController : MonoBehaviour
         _cardGraphics.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Animates initial memorizing sequence at the beginning of every level
+    /// </summary>
+    /// <param name="_showTime"></param>
+    /// <returns></returns>
     private IEnumerator InitialShowing(float _showTime)
     {
         StartCoroutine(FlippingCard(true));
