@@ -42,6 +42,12 @@ public class CardLayoutCreator : MonoBehaviour
         Constructlayout(_layoutX, _layoutY);
     }
 
+    public void LockCards()
+    {
+        foreach (var _card in _spawnedCards)
+            _card.LockCard();
+    }
+
     private void Constructlayout(int _layoutX, int _layoutY)
     {
         _gridLayout.constraintCount = _layoutX;

@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
     [SerializeField] private TextMeshProUGUI _levelText;
+    [SerializeField] private TextMeshProUGUI _gameOverText;
 
     private CardLayoutCreator _cardLayoutCreator;
     private CardPrefabController _lastCardController;
@@ -55,9 +56,6 @@ public class GameController : MonoBehaviour
 
     public void PressHomeButton()
     {
-        StopAllCoroutines();
-        _cardLayoutCreator.StopAllCoroutines();
-
         StartCoroutine(StoppingGame());
     }
 
@@ -94,7 +92,7 @@ public class GameController : MonoBehaviour
                 {
                     DataContainer.Instance.SubmitRecord(_scoringSystem.CurrentScore);
 
-                    StartCoroutine(StoppingGame());
+                    StartCoroutine(PlayingGameOver());
                 }
             }
 
@@ -112,6 +110,26 @@ public class GameController : MonoBehaviour
         _currentLevel++;
 
         StartCoroutine(StartingLevel());
+    }
+
+    private IEnumerator PlayingGameOver()
+    {
+        _cardLayoutCreator.LockCards();
+
+        _gameOverText.text = $"Game over!\nFinal score: {_scoringSystem.CurrentScore}";
+        _gameOverText.color = new Color(1f, 1f, 1f, 0f);
+        _gameOverText.gameObject.SetActive(true);
+        _gameOverText.DOColor(Color.white, 0.5f);
+
+        yield return new WaitForSeconds(2.5f);
+
+        _gameOverText.DOColor(new Color(1f, 1f, 1f, 0f), 0.5f);
+
+        yield return new WaitForSeconds(0.5f);
+
+        _gameOverText.gameObject.SetActive(false);
+
+        StartCoroutine(StoppingGame());
     }
 
     private IEnumerator StartingLevel()
