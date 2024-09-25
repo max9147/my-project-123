@@ -28,6 +28,8 @@ public class MainMenuController : MonoBehaviour
     private void Awake()
     {
         _isChangingScreen = false;
+
+        Application.targetFrameRate = 120;
     }
 
     private void Start()
