@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private Image _globalFade;
     [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
+    [SerializeField] private Sprite _heartSprite;
+    [SerializeField] private Sprite _skullSprite;
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _gameOverText;
 
@@ -43,7 +45,7 @@ public class GameController : MonoBehaviour
         foreach (var _heart in _hearts)
         {
             _heart.gameObject.SetActive(false);
-            _heart.color = Color.red;
+            _heart.sprite = _heartSprite;
         }
 
         for (int i = 0; i < _currentHealth; i++)
@@ -86,7 +88,7 @@ public class GameController : MonoBehaviour
                 _selectedCardController.CloseCard(1f);
 
                 _currentHealth--;
-                _hearts[_currentHealth].color = Color.black;
+                _hearts[_currentHealth].sprite = _skullSprite;
 
                 if (_currentHealth == 0)
                 {
