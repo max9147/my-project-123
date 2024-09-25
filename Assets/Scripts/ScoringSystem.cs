@@ -24,9 +24,6 @@ public class ScoringSystem : MonoBehaviour
 
     public void CountTurn(bool _isCorrect)
     {
-        _currentTurns += 2;
-        _turnsText.text = _currentTurns.ToString();
-
         if (_isCorrect)
         {
             StartCoroutine(ShowingAddedScore(_currentCombo));
@@ -41,6 +38,12 @@ public class ScoringSystem : MonoBehaviour
             _currentCombo = 1;
             _comboText.text = $"{_currentCombo}x";
         }
+    }
+
+    public void IncreaseTurns()
+    {
+        _currentTurns++;
+        _turnsText.text = _currentTurns.ToString();
     }
 
     public void ResetScoring()

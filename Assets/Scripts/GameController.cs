@@ -67,6 +67,8 @@ public class GameController : MonoBehaviour
 
     public void SelectCard(int _selectedCardID, CardPrefabController _selectedCardController)
     {
+        _scoringSystem.IncreaseTurns();
+
         if (_lastCardID == -1)
         {
             _lastCardID = _selectedCardID;
