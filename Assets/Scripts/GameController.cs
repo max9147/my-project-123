@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Image _globalFade;
     [SerializeField] private Image[] _hearts;
     [SerializeField] private MainMenuController _mainMenuController;
+    [SerializeField] private RectTransform _homeButton;
     [SerializeField] private Sprite _heartSprite;
     [SerializeField] private Sprite _skullSprite;
     [SerializeField] private TextMeshProUGUI _levelText;
@@ -102,7 +103,7 @@ public class GameController : MonoBehaviour
                 {
                     DataContainer.Instance.SubmitRecord(_scoringSystem.CurrentScore);
 
-                    StartCoroutine(PlayingGameOver());
+                    PlayGameOver();
                 }
             }
 
@@ -122,6 +123,18 @@ public class GameController : MonoBehaviour
         StartCoroutine(StartingLevel());
     }
 
+    private void PlayGameOver()
+    {
+        _cardLayoutCreator.HideCards();
+
+        _gameOverText.text = $"Game over!\nFinal score: {_scoringSystem.CurrentScore}";
+        _gameOverText.color = new Color(1f, 1f, 1f, 0f);
+        _gameOverText.gameObject.SetActive(true);
+        _gameOverText.DOColor(Color.white, 0.5f);
+
+        _homeButton.DOPunchScale(Vector3.one * 0.2f, 2f, 0, 1f).SetLoops(-1).SetEase(Ease.InOutSine);
+    }
+
     private IEnumerator FlashError()
     {
         _errorFlash.DOKill();
@@ -132,26 +145,6 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         _errorFlash.DOColor(new Color(1f, 0f, 0f, 0f), 0.25f);
-    }
-
-    private IEnumerator PlayingGameOver()
-    {
-        _cardLayoutCreator.LockCards();
-
-        _gameOverText.text = $"Game over!\nFinal score: {_scoringSystem.CurrentScore}";
-        _gameOverText.color = new Color(1f, 1f, 1f, 0f);
-        _gameOverText.gameObject.SetActive(true);
-        _gameOverText.DOColor(Color.white, 0.5f);
-
-        yield return new WaitForSeconds(2.5f);
-
-        _gameOverText.DOColor(new Color(1f, 1f, 1f, 0f), 0.5f);
-
-        yield return new WaitForSeconds(0.5f);
-
-        _gameOverText.gameObject.SetActive(false);
-
-        StartCoroutine(StoppingGame());
     }
 
     private IEnumerator StartingLevel()
@@ -181,6 +174,12 @@ public class GameController : MonoBehaviour
         _globalFade.DOColor(Color.black, 0.5f);
 
         yield return new WaitForSeconds(0.5f);
+
+        _gameOverText.color = new Color(1f, 1f, 1f, 0f);
+        _gameOverText.gameObject.SetActive(false);
+
+        _homeButton.DOKill();
+        _homeButton.localScale = Vector3.one;
 
         _scoringSystem.ResetScoring();
         _gameScreen.SetActive(false);

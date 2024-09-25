@@ -42,10 +42,10 @@ public class CardLayoutCreator : MonoBehaviour
         Constructlayout(_layoutX, _layoutY);
     }
 
-    public void LockCards()
+    public void HideCards()
     {
         foreach (var _card in _spawnedCards)
-            _card.LockCard();
+            _card.HideCard();
     }
 
     private void Constructlayout(int _layoutX, int _layoutY)

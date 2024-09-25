@@ -61,7 +61,7 @@ public class ScoringSystem : MonoBehaviour
     {
         RectTransform _currentAddedScore = Instantiate(_addedScorePrefab, _statsContainer);
         _currentAddedScore.GetComponent<TextMeshProUGUI>().text = $"+{_setScore}";
-        _currentAddedScore.anchoredPosition = _scoreText.GetComponent<RectTransform>().anchoredPosition + new Vector2(100f, 0f);
+        _currentAddedScore.anchoredPosition = _scoreText.GetComponent<RectTransform>().anchoredPosition + new Vector2(0f, 150f);
         _currentAddedScore.DOAnchorPosY(_currentAddedScore.anchoredPosition.y + 100f, 0.5f);
 
         yield return new WaitForSeconds(0.25f);

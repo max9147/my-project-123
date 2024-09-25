@@ -41,11 +41,6 @@ public class CardPrefabController : MonoBehaviour
         StartCoroutine(InitialShowing(_showTime));
     }
 
-    public void LockCard()
-    {
-        _cardIsLocked = true;
-    }
-
     public void PressCard()
     {
         if (_cardIsLocked)
