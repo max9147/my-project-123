@@ -6,7 +6,6 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] private AudioSource _correctSound;
     [SerializeField] private AudioSource _failSound;
-    [SerializeField] private AudioSource _whooshSound;
     [SerializeField] private AudioSource _wrongSound;
 
     private void Awake()
@@ -27,11 +26,6 @@ public class SoundManager : MonoBehaviour
     public void PlayFailSound()
     {
         _failSound.Play();
-    }
-
-    public void PlayWhooshSound()
-    {
-        _whooshSound.Play();
     }
 
     public void PlayWrongSound()

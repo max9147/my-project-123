@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CardPrefabController : MonoBehaviour
 {
+    [SerializeField] private AudioSource _whooshSound;
     [SerializeField] private Image _cardFrontImage;
     [SerializeField] private Image _cardBackImage;
     [SerializeField] private RectTransform _cardGraphics;
@@ -33,6 +34,9 @@ public class CardPrefabController : MonoBehaviour
 
     public void HideCard()
     {
+        if (_cardGraphics.anchoredPosition != Vector2.zero)
+            return;
+
         StartCoroutine(HidingCard());
     }
 
@@ -46,7 +50,7 @@ public class CardPrefabController : MonoBehaviour
         if (_cardIsLocked)
             return;
 
-        SoundManager.Instance.PlayWhooshSound();
+        _whooshSound.Play();
 
         _gameController.SelectCard(_cardID, this);
 
@@ -89,6 +93,10 @@ public class CardPrefabController : MonoBehaviour
         _cardGraphics.GetComponent<Image>().raycastTarget = false;
 
         _cardGraphics.DOJumpAnchorPos(new Vector2(Random.Range(-Screen.width / 2, Screen.width / 2), -Screen.height), Screen.height / 2f, 1, 1f);
+
+        yield return new WaitForSeconds(1f);
+
+        _cardGraphics.gameObject.SetActive(false);
     }
 
     private IEnumerator InitialShowing(float _showTime)
