@@ -96,6 +96,9 @@ public class CardLayoutCreator : MonoBehaviour
 
     private IEnumerator AnimateCardsSpawn()
     {
+        _initialShowSlider.DOKill();
+        _initialShowSlider.value = 0f;
+
         for (int i = 0; i < _spawnedCards.Count; i++)
         {
             _spawnedCards[i].AnimateSpawn();
@@ -106,7 +109,10 @@ public class CardLayoutCreator : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         foreach (var _spawnedCard in _spawnedCards)
-            _spawnedCard.InitialShow(5 - (int)DataContainer.Instance.CurrentDifficulty);
+        {
+            if (_spawnedCard.isActiveAndEnabled)
+                _spawnedCard.InitialShow(5 - (int)DataContainer.Instance.CurrentDifficulty);
+        }
 
         _initialShowSlider.value = 1f;
 

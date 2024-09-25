@@ -58,6 +58,9 @@ public class GameController : MonoBehaviour
 
     public void PressHomeButton()
     {
+        StopAllCoroutines();
+        _cardLayoutCreator.StopAllCoroutines();
+
         StartCoroutine(StoppingGame());
     }
 

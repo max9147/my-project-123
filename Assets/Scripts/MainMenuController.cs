@@ -118,12 +118,12 @@ public class MainMenuController : MonoBehaviour
             case MenuContainer.Settings:
                 _settingsContainer.anchoredPosition = new Vector2(-Screen.width / 2f - _settingsContainer.rect.width, 0f);
                 _settingsContainer.gameObject.SetActive(true);
-                _settingsContainer.DOAnchorPos(Vector2.zero, 0.5f);
+                _settingsContainer.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.InOutSine);
                 break;
             case MenuContainer.Leaderboard:
                 _leaderboardContainer.anchoredPosition = new Vector2(-Screen.width / 2f - _leaderboardContainer.rect.width, 0f);
                 _leaderboardContainer.gameObject.SetActive(true);
-                _leaderboardContainer.DOAnchorPos(Vector2.zero, 0.5f);
+                _leaderboardContainer.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.InOutSine);
                 break;
             default:
                 break;
@@ -145,10 +145,10 @@ public class MainMenuController : MonoBehaviour
         switch (_setMenuContainer)
         {
             case MenuContainer.Settings:
-                _settingsContainer.DOAnchorPos(new Vector2(Screen.width / 2f + _settingsContainer.rect.width, 0f), 0.5f);
+                _settingsContainer.DOAnchorPos(new Vector2(Screen.width / 2f + _settingsContainer.rect.width, 0f), 0.5f).SetEase(Ease.InOutSine);
                 break;
             case MenuContainer.Leaderboard:
-                _leaderboardContainer.DOAnchorPos(new Vector2(Screen.width / 2f + _settingsContainer.rect.width, 0f), 0.5f);
+                _leaderboardContainer.DOAnchorPos(new Vector2(Screen.width / 2f + _settingsContainer.rect.width, 0f), 0.5f).SetEase(Ease.InOutSine);
                 break;
             default:
                 break;

@@ -23,7 +23,7 @@ public class CardPrefabController : MonoBehaviour
     {
         _cardGraphics.anchoredPosition = new Vector2(Random.Range(-Screen.width / 2, Screen.width / 2), -Screen.height);
         _cardGraphics.gameObject.SetActive(true);
-        _cardGraphics.DOAnchorPos(Vector2.zero, 0.5f);
+        _cardGraphics.DOAnchorPos(Vector2.zero, 0.5f).SetEase(Ease.InOutSine);
     }
 
     public void CloseCard(float _setDelay)
@@ -70,14 +70,14 @@ public class CardPrefabController : MonoBehaviour
         if (_toFront)
             _cardIsLocked = true;
 
-        _cardGraphics.DOScaleX(0f, 0.2f);
+        _cardGraphics.DOScaleX(0f, 0.2f).SetEase(Ease.InSine);
 
         yield return new WaitForSeconds(0.2f);
 
         _cardBackImage.gameObject.SetActive(!_toFront);
         _cardFrontImage.gameObject.SetActive(_toFront);
 
-        _cardGraphics.DOScaleX(1f, 0.2f);
+        _cardGraphics.DOScaleX(1f, 0.2f).SetEase(Ease.OutSine);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -88,6 +88,8 @@ public class CardPrefabController : MonoBehaviour
     private IEnumerator HidingCard()
     {
         yield return new WaitForSeconds(0.5f);
+
+        _cardGraphics.GetComponent<Image>().raycastTarget = false;
 
         _cardGraphics.DOJumpAnchorPos(new Vector2(Random.Range(-Screen.width / 2, Screen.width / 2), -Screen.height), Screen.height / 2f, 1, 1f);
     }
